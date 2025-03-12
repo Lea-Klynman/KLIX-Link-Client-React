@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, TextField, Grid, Box, Alert } from '@mui/material';
-import { AppDispatch } from '../store';
-import { loginUser } from '../userSlice';
+import { Button, TextField, Grid2 as Grid, Box, Alert } from '@mui/material';
+import { AppDispatch } from './store';
+import { loginUser } from './userSlice';
 
 const Login = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -59,13 +59,13 @@ const Login = () => {
             )}
             <form onSubmit={handleLogin}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TextField label="Email" inputRef={emailRef} fullWidth required />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TextField type="password" label="Password" inputRef={passwordRef} fullWidth required />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Button type="submit" variant="contained" color="primary" fullWidth>
                             Login
                         </Button>
