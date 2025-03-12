@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, TextField, Grid2 as Grid, Box, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { AppDispatch } from './store';
-import { registerUser } from './userSlice';
+import { Button, TextField, Grid, Box, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { AppDispatch } from '../store';
+import { registerUser } from '../userSlice';
 import { User } from '../types/User';
 import { Role } from '../types/Role';
 
@@ -95,16 +95,16 @@ const Register = () => {
             )}
             <form onSubmit={handleRegister}>
                 <Grid container spacing={2}>
-                    <Grid size={12}>
+                    <Grid item xs={12}>
                         <TextField label="Name" inputRef={nameRef} fullWidth required />
                     </Grid>
-                    <Grid size={12}>
+                    <Grid item xs={12}>
                         <TextField label="Email" inputRef={emailRef} fullWidth required />
                     </Grid>
-                    <Grid size={12}>
+                    <Grid item xs={12}>
                         <TextField type="password" label="Password" inputRef={passwordRef} fullWidth required />
                     </Grid>
-                    <Grid size={12}>
+                    <Grid item xs={12}>
                         <Button type="submit" variant="contained" color="primary" fullWidth>
                             Register
                         </Button>
