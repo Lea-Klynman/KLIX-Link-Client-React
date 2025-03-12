@@ -2,94 +2,101 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import { RootStore } from './store';
-import Alert from '@mui/material/Alert';
 import { User } from '../types/User';
 
-const url = "http://localhost:3000/api/users";
+const url = "http://localhost:3000/api";
+
 
 export const fetchUser = createAsyncThunk('user/fetch', async (userId: number, thunkApi) => {
     try {
-        const response = await axios.get(`${url}/${userId}`);
+        const response = await axios.get(`${url}/User/${userId}`);
         return response.data as User;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue(error);
     }
 });
 
+
 export const registerUser = createAsyncThunk('user/register', async (user: Partial<User>, thunkApi) => {
     try {
-        const res = await axios.post("http://localhost:3000/api/auth/register", user);
+        const res = await axios.post(`${url}/Auth/register`, user,{ headers: { "Content-Type": "application/json" } });
         return res.data;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue('An unknown error occurred');
     }
 });
 
+
 export const deleteUser = createAsyncThunk('user/delete', async (userId: number, thunkApi) => {
     try {
-        await axios.delete(`${url}/${userId}`);
+        await axios.delete(`${url}/User/${userId}`);
         return userId;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue('Failed to delete user');
     }
 });
 
+
 export const loginUser = createAsyncThunk('user/login', async ({ email, password }: { email: string, password: string }, thunkApi) => {
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+        const response = await axios.post(`${url}/Auth/login`, { email, password }, { headers: { "Content-Type": "application/json" } });
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue('Failed to login');
     }
 });
 
+
 export const getUserByEmail = createAsyncThunk('user/getByEmail', async (email: string, thunkApi) => {
     try {
-        const response = await axios.get(`http://localhost:3000/api/users/email?email=${email}`);
+        const response = await axios.get(`${url}/User/${email}`);
         return response.data as User;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue('Failed to get user by email');
     }
 });
 
+
 export const updateName = createAsyncThunk('user/updateName', async ({ id, name }: { id: number, name: string }, thunkApi) => {
     try {
-        const response = await axios.put(`http://localhost:3000/api/users/name/${id}`, { name });
+        const response = await axios.put(`${url}/name/${id}`, { name },{ headers: { "Content-Type": "application/json" } });
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue('Failed to update name');
     }
 });
 
+
 export const updatePassword = createAsyncThunk('user/updatePassword', async ({ id, password }: { id: number, password: string }, thunkApi) => {
     try {
-        const response = await axios.put(`http://localhost:3000/api/users/password/${id}`, { password });
+        const response = await axios.put(`${url}/password/${id}`, { password },{ headers: { "Content-Type": "application/json" } });
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
-            <Alert severity="error">{error.message}</Alert>
+            thunkApi.rejectWithValue(error.message)
         }
         return thunkApi.rejectWithValue('Failed to update password');
     }
 });
+
 
 const userSlice = createSlice({
     name: 'user',

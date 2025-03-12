@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, TextField, Grid2 as Grid, Box, Alert } from '@mui/material';
+import { Button, TextField, Grid2 as Grid, Box, Alert,  } from '@mui/material';
 import { AppDispatch } from './store';
 import { loginUser } from './userSlice';
+import { Link } from 'react-router';
 
 const Login = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -72,6 +73,7 @@ const Login = () => {
                     </Grid>
                 </Grid>
             </form>
+            <Button type="button" component={Link} to='/register'>Sign up</Button>
         </Box>
     );
 };
