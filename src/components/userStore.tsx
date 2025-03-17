@@ -7,7 +7,7 @@ const url = "http://localhost:3000/api";
 
 class UserStore {
     user = {} as User;
-    token:string|null = null;
+    token:string|null = sessionStorage.getItem('token');
     loading:boolean = false;
     error:string | null = null;
 
@@ -15,6 +15,18 @@ class UserStore {
         makeAutoObservable(this);
     }
 
+    setToken(token: string | null) {
+        this.token = token;
+        if (token) {
+          sessionStorage.setItem("token", token); // שמירה לאחר התחברות
+        } else {
+          sessionStorage.removeItem("token"); // ניקוי לאחר יציאה
+        }
+      }
+    
+      logout() {
+        this.setToken(null);
+      }
     async fetchUser(userId:number){
         this.loading = true;
         this.error = null;
@@ -47,6 +59,7 @@ class UserStore {
                 if(this.token){
                     sessionStorage.setItem('token', this.token);
                 }
+                localStorage.setItem("loginTime", Date.now().toString());
                 this.loading = false;
             });
         } catch (error:any) {
@@ -90,6 +103,7 @@ class UserStore {
                 if(this.token){
                     sessionStorage.setItem('token', this.token);
                 }
+                localStorage.setItem("loginTime", Date.now().toString());
             });
         } catch (error : any) {
             runInAction(() => {

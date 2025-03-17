@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router';
+import { createBrowserRouter } from 'react-router';
 import Login from './components/Login';
 import Register from './components/Register';
 import UploadFile from './components/UploadFile';
@@ -6,15 +6,30 @@ import FileList from './components/FileList';
 import AppLayout from './components/AppLayout';
 import ViewFile from './components/ViewFile';
 import { JSX, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import userStore from './components/userStore';
+
+
+const TOKEN_EXPIRATION_TIME = 1000* 60 * 60 * 2; 
 
 const isAuthenticated = (): boolean => {
-  return !!localStorage.getItem('token');
+  const token = userStore.token;
+  const loginTime = localStorage.getItem("loginTime");
+console.log('isAuthenticated', token, loginTime);
+
+  if (!token || !loginTime) return false;
+
+  const elapsedTime = Date.now() - parseInt(loginTime, 10);
+  if (elapsedTime > TOKEN_EXPIRATION_TIME) {
+    userStore.logout();
+    console.log('Token expired');
+    
+    return false;
+  }
+
+  return true;
 };
 
-const requireAuthLoader = () => {
-  return isAuthenticated();
-};
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
@@ -36,11 +51,12 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      
+      { path: 'upload', element: <ProtectedRoute><UploadFile /></ProtectedRoute>},
+      { path: 'filelist', element: <ProtectedRoute><FileList /></ProtectedRoute> },
+      { path: 'view-file', element: <ProtectedRoute><ViewFile /></ProtectedRoute> },
       { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
-      { path: 'upload', element: <UploadFile /> },
-      { path: 'filelist', element: <FileList /> },
-      { path: 'view-file', element: <ViewFile /> },
+      { path: 'register', element: <Register /> }
     ],
   },
 ]);

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { UserFile } from "../types/UserFile";
 import axios from "axios";
+import userStore from "./userStore";
 
 class FileStore {
     files: UserFile[] = [];
@@ -10,7 +11,7 @@ class FileStore {
     constructor() {
       makeAutoObservable(this);
     }
-  
+    url="http://localhost:3000/api/UserFile";
     async uploadFile(file: File, name: string, password: string) {
       const formData = new FormData();
       formData.append("file", file);
@@ -19,12 +20,14 @@ class FileStore {
   
       try {
         this.loading = true;
-        await axios.post("/api/files/upload", formData, {
+        await axios.post(`/upload/${userStore.user.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         await this.fetchFiles();
+        alert("Upload successful");
       } catch (error: any) {
         this.error = error.response?.data?.message || "Error uploading file";
+        alert("Upload failed");
       } finally {
         this.loading = false;
       }

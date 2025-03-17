@@ -2,26 +2,29 @@ import { AppBar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, T
 import { Outlet } from "react-router";
 import NavBar from "./NavBar";
 import { Spa } from "@mui/icons-material";
-
+import logo from "../assets/‏‏logo.png";
 export default function appLayout() {
   return (
     <>
      <AppBar>
 
 <Container maxWidth="xl">
-        <Toolbar disableGutters>
-            <Spa sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 ,color:"#ED3D48"}} />
-            <Typography variant="h6" noWrap component="a" href="#app-bar-with-responsive-menu"
-                sx={{  mr: 2,  display: { xs: 'flex', md: 'none' },  fontFamily: 'monospace',
-                    fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
-                }} > LR
-            </Typography>    
+        {/* <Toolbar disableGutters> */}
+        <Toolbar>
+        <img
+          src={logo}
+          alt="KLIX-Link Logo"
+          style={{ height: "40px", marginRight: "10px" }}
+        />
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          KLIX-Link
+        </Typography>  
         <NavBar />               
             <Spa sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
             <Typography variant="h5" noWrap component="a" href="#app-bar-with-responsive-menu"
                 sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, flexGrow: 1, fontFamily: 'cursive', fontWeight: 700,
                     letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
-                }} > LallyReecipies
+                }} > KLIX-Link
             </Typography>
             
         
