@@ -1,30 +1,46 @@
-import { createBrowserRouter } from 'react-router'
-import Login from './components/login'
-import Register from './components/register'
+import { createBrowserRouter, Navigate } from 'react-router';
+import Login from './components/Login';
+import Register from './components/Register';
+import UploadFile from './components/UploadFile';
+import FileList from './components/FileList';
+import AppLayout from './components/AppLayout';
+import ViewFile from './components/ViewFile';
+import { JSX, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const isAuthenticated = (): boolean => {
+  return !!localStorage.getItem('token');
+};
+
+const requireAuthLoader = () => {
+  return isAuthenticated();
+};
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  return children;
+};
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Login/>,
-    },
-            {path: 'login', element: <Login/>},
-            {path: 'register', element: <Register/>}
-        
-        // children: [
-        //   { path: '', element: <Home/> },
-        //     { path: 'home', element: <Home/> },
-        //     { 
-        //         path: 'ShowRecipe', 
-        //         element: <ShowRecipe/>,
-        //         children: [
-        //             { path: '', element: <NoRecipe/> },
-        //             { path: 'recipes/:id', element: <RecipeInstruction/> },
-        //             { path: 'Add/:id', element: <AddRecipe/> },
-        //             { path: 'successedAdding', element: <SuccessedAdding/> },
-        //             { path: 'deleteS', element: <DeleteS/> }
-        //         ]
-        //     },
-        //     { path: 'about', element: <About/> }
-        // ]
-    
-])
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { path: 'upload', element: <UploadFile /> },
+      { path: 'filelist', element: <FileList /> },
+      { path: 'view-file', element: <ViewFile /> },
+    ],
+  },
+]);

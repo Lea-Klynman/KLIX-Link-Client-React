@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { RootStore } from './store';
+import { RootStore } from './Store';
 import { User } from '../types/User';
+import { Roles } from '../types/Roles';
 
 const url = "http://localhost:3000/api";
 
@@ -48,7 +49,9 @@ export const deleteUser = createAsyncThunk('user/delete', async (userId: number,
 
 export const loginUser = createAsyncThunk('user/login', async ({ email, password }: { email: string, password: string }, thunkApi) => {
     try {
-        const response = await axios.post(`${url}/Auth/login`, { email, password }, { headers: { "Content-Type": "application/json" } });
+        const response = await axios.post(`${url}/Auth/login`, { email, password, roles: [Roles.User] }, { headers: { "Content-Type": "application/json" } });
+        console.log(response.data);
+        
         return response.data;
     } catch (error) {
         if (error instanceof Error) {

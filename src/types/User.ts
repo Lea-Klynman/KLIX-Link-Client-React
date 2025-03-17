@@ -1,4 +1,4 @@
-import { Role } from "./Role";
+import { Roles } from "./Roles";
 
 export type User= {
     id: number;
@@ -7,7 +7,7 @@ export type User= {
     password: string;
     filesId: number[];
     isActive: boolean;
-    roles: Role[];
+    roles: Roles[];
 }
 
 

@@ -1,13 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, TextField, Grid2 as Grid, Box, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { AppDispatch } from './store';
-import { registerUser } from './userSlice';
+import { AppDispatch } from './Store';
 import { User } from '../types/User';
-import { Role } from '../types/Role';
+import { Roles } from '../types/Roles';
+import { observer } from 'mobx-react-lite';
+import userStore from './userStore';
+import { Link, useNavigate } from 'react-router';
+const Register = observer((() => {
+    const navigate = useNavigate(); 
 
-const Register = () => {
-    const dispatch = useDispatch<AppDispatch>();
     const nameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -66,15 +68,19 @@ const Register = () => {
             const password = passwordRef.current?.value;
 
             const newUser: Partial<User> = {
+               
                 name,
                 email,
                 password,
-                isActive: true,
-                roles: [{ roleName: 'user' }] as Role[]
+                filesId: [],
+                isActive: true
+
             };
 
             try {
-                await dispatch(registerUser(newUser)).unwrap();
+                // await dispatch(registerUser(newUser)).unwrap();
+                await userStore.registerUser(newUser,[Roles.User]);
+                navigate('/');
                 setAlertInfo({ severity: 'success', message: 'Successfully registered!' });
                 setIsDialogOpen(false);
             } catch (error) {
@@ -109,6 +115,8 @@ const Register = () => {
                             Register
                         </Button>
                     </Grid>
+                    <Button type="button" component={Link} to='/login'> Have an account? Sign up</Button>
+
                 </Grid>
             </form>
             <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
@@ -137,6 +145,8 @@ const Register = () => {
             </Dialog>
         </Box>
     );
-};
+
+}));
+
 
 export default Register;
