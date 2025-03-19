@@ -14,7 +14,7 @@ const TOKEN_EXPIRATION_TIME = 1000* 60 * 60 * 2;
 
 const isAuthenticated = (): boolean => {
   const token = userStore.token;
-  const loginTime = localStorage.getItem("loginTime");
+  const loginTime = sessionStorage.getItem("loginTime");
 console.log('isAuthenticated', token, loginTime);
 
   if (!token || !loginTime) return false;

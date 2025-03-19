@@ -1,11 +1,12 @@
 export type UserFile={
     id: number;
-    Name: string;
+    name: string;
     ownerId: number;
     fileLink: string;
     encryptedLink: string;
     filePassword: string;
-    createedAt: Date;
+    fileType: string;
+    createdAt: Date;
     isActive: boolean;
 
 }

@@ -10,7 +10,8 @@ const theme = createTheme({
         },
         background: {
           default: "#545E68", // רקע כללי אפור-כחלחל
-          paper: "#38BDF8", // רקע של כרטיסים/אלמנטים
+          paper:"#e8eef1",
+          // "#38BDF8", // רקע של כרטיסים/אלמנטים
           /*#535D67 */
         },
         text: {
