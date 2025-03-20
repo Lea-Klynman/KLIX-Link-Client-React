@@ -2,7 +2,7 @@ import { AppBar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, T
 import { Outlet } from "react-router";
 import NavBar from "./NavBar";
 import { Spa } from "@mui/icons-material";
-import logo from "../assets/‏‏logo.png";
+import logo from "../assets/logo.png";
 export default function appLayout() {
   return (
     <>
@@ -14,7 +14,7 @@ export default function appLayout() {
         <img
           src={logo}
           alt="KLIX-Link Logo"
-          style={{ height: "40px", marginRight: "10px" }}
+          style={{ height: "55px", marginRight: "10px" }}
         />
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           KLIX-Link

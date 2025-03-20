@@ -7,7 +7,7 @@ class FileStore {
   files: UserFile[] = [];
   loading: boolean = false;
   error: string | null = null;
-  url: string = "http://localhost:3000/api/File";
+  url: string = "http://localhost:3000/api/UserFile";
 
   constructor() {
     makeAutoObservable(this);
@@ -21,7 +21,9 @@ class FileStore {
     formData.append("fileType", type);
 
     console.log(formData);
-
+if(userStore.user.id==null){
+  userStore.user.id=parseInt(sessionStorage.getItem('userId')??'');
+}
     try {
       runInAction(() => {
         this.loading = true;

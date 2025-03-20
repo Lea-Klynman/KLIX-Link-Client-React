@@ -115,19 +115,7 @@ const FileUpload = observer(() => {
       </CardContent>
     </Card>
 
-    <Dialog open={openDialog} onClose={handleCloseDialog} sx={{ maxWidth: "80%", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-      <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h6" sx={{ color: dialogSeverity === "error" ? "red" : "green" }}>
-          {dialogSeverity === "error" ? "Error" : "Success"}
-        </Typography>
-        <IconButton onClick={handleCloseDialog} edge="end" color="inherit"><Close /></IconButton>
-        </DialogTitle>
-      <DialogContent>
-        <Typography sx={{ color: dialogSeverity === "error" ? "red" : "green" }}>
-          {dialogMessage}
-        </Typography>
-      </DialogContent>
-    </Dialog>
+    
     </>
   );
 });
