@@ -4,5 +4,7 @@ export enum Roles {
     Guest="Guest",
     Editor="Editor",
     Viewer="viewer",
-    SuperAdmin="SuperAdmin"
+    SuperAdmin="SuperAdmin",
+    Operator="Operator",
+
 }

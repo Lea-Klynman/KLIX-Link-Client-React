@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button, TextField, Grid2 as Grid, Box, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { User } from '../types/User';
-import { Roles } from '../types/Roles';
+import { User } from '../../types/User';
+import { Roles } from '../../types/Roles';
 import { observer } from 'mobx-react-lite';
 import userStore from './userStore';
 import { Link, useNavigate } from 'react-router';

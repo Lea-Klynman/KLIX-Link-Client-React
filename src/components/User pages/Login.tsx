@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button, TextField, Grid2 as Grid, Box, Alert,  } from '@mui/material';
 import { Link, useNavigate } from 'react-router';
 import userStore from './userStore';
-import { Roles } from '../types/Roles';
+import { Roles } from '../../types/Roles';
 import { observer } from 'mobx-react-lite';
 
 const Login = observer(() => {

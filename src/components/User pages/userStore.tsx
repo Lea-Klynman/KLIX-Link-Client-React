@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import axios from 'axios';
-import { User } from '../types/User';
-import { Roles } from '../types/Roles';
+import { User } from '../../types/User';
+import { Roles } from '../../types/Roles';
 
 const url = "http://localhost:3000/api";
 
@@ -71,6 +71,9 @@ class UserStore {
                     sessionStorage.setItem('userId',this.user.id.toString()); 
                     sessionStorage.setItem("loginTime", Date.now().toString());
                 }
+                const subject = "Welcome to KLIX-Link!";
+                const body = `Hello ${user.name},\n\nWelcome to KLIX-Link! Your account has been successfully created.\n\nBest regards,\nKLIX-Link Team`;
+                this.sendEmail(user.email!, subject, body);
 
                 this.loading = false;
             });
