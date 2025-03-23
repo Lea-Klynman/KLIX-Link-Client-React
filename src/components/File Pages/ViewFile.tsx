@@ -29,8 +29,8 @@ const  ViewFile= observer(() =>{
 
     
       if (fileStore.error) return <div>Error: {fileStore.error}</div>;
-  if(fileStore.files?.length === 0) return <NoFileShare/>;
-  const groupedFiles = fileStore.files?.reduce((acc, file) => {
+  if(fileStore.fileShare?.length === 0) return <NoFileShare/>;
+  const groupedFiles = fileStore.fileShare?.reduce((acc, file) => {
     const dateKey = new Date(file.createdAt).toLocaleDateString();
     acc[dateKey] = acc[dateKey] || [];
     acc[dateKey].push(file);
