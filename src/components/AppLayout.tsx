@@ -1,9 +1,20 @@
 import { AppBar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import NavBar from "./NavBar";
 import { Spa } from "@mui/icons-material";
 import logo from "../assets/logo.png";
+import UserDetails from "./User pages/UserDetails";
+import React from "react";
+import userStore from "./User pages/userStore";
 export default function appLayout() {
+  const navigate = useNavigate();
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+};
+const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+};
   return (
     <>
      <AppBar>
@@ -14,18 +25,32 @@ export default function appLayout() {
         <img
           src={logo}
           alt="KLIX-Link Logo"
-          style={{ height: "55px", marginRight: "10px" }}
+          style={{ height: "55px", marginRight: "5px" }}
         />
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography variant="h4"  fontFamily="cursive"align="left"  marginLeft="10px" sx={{ flexGrow: 1 }}>
           KLIX-Link
         </Typography>  
-        <NavBar />               
-            <Spa sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-            <Typography variant="h5" noWrap component="a" href="#app-bar-with-responsive-menu"
-                sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, flexGrow: 1, fontFamily: 'cursive', fontWeight: 700,
-                    letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none',
-                }} > KLIX-Link
-            </Typography>
+       {userStore.getUserId()&& <NavBar /> }              
+            
+            <Box sx={{ flexGrow: 0, display:'flex',}}>
+                    
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu}>
+                                <UserDetails />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser}
+                                anchorOrigin={{ vertical: 'top', horizontal: 'right',}}
+                                keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right',}}
+                                open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                <Typography onClick={() => {
+                                  userStore.logout();
+                                  navigate('/login');
+                                }}>Log Out</Typography>
+                            </MenuItem>
+                        </Menu>
+                    </Box>
             
         
         

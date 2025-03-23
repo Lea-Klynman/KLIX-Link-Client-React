@@ -8,6 +8,8 @@ import ViewFile from './components/File Pages/ViewFile';
 import { JSX, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import userStore from './components/User pages/userStore';
+import Dashboard from './components/User pages/Dashboard';
+import About from './components/About';
 
 
 const TOKEN_EXPIRATION_TIME = 1000* 60 * 60 * 2; 
@@ -51,7 +53,8 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      
+      {path:'',element: <ProtectedRoute><Dashboard/></ProtectedRoute>},
+      {path:'about',element: <ProtectedRoute><About/></ProtectedRoute>},
       { path: 'upload', element: <ProtectedRoute><UploadFile /></ProtectedRoute>},
       { path: 'filelist', element: <ProtectedRoute><FileList /></ProtectedRoute> },
       { path: 'view-file', element: <ProtectedRoute><ViewFile /></ProtectedRoute> },
