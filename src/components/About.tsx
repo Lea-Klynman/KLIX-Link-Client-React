@@ -25,23 +25,23 @@ const About: React.FC = () => {
               <Typography variant="h6" gutterBottom>Our Core Principles</Typography>
               <List>
                 <ListItem>
-                  <ListItemIcon><Lock color="primary" /></ListItemIcon>
+                  <ListItemIcon><Lock sx={{ color: "#2be0dc"}} /></ListItemIcon>
                   <ListItemText primary="Security - We use state-of-the-art encryption to protect your data." />
                 </ListItem>
                 <ListItem>
-                  <ListItemIcon><VisibilityOff color="primary" /></ListItemIcon>
+                  <ListItemIcon><VisibilityOff sx={{ color: "#2be0dc"}} /></ListItemIcon>
                   <ListItemText primary="Confidentiality - Your files remain private and accessible only to authorized users." />
                 </ListItem>
                 <ListItem>
-                  <ListItemIcon><Sync color="primary" /></ListItemIcon>
+                  <ListItemIcon><Sync sx={{ color: "#2be0dc"}} /></ListItemIcon>
                   <ListItemText primary="Reliability - Our platform ensures uninterrupted and secure file access." />
                 </ListItem>
                 <ListItem>
-                  <ListItemIcon><Verified color="primary" /></ListItemIcon>
+                  <ListItemIcon><Verified sx={{color: "#2be0dc"}} /></ListItemIcon>
                   <ListItemText primary="Trust - We are committed to transparency and strong authentication measures." />
                 </ListItem>
                 <ListItem>
-                  <ListItemIcon><Speed color="primary" /></ListItemIcon>
+                  <ListItemIcon><Speed sx={{color: "#2be0dc"}}/></ListItemIcon>
                   <ListItemText primary="Efficiency - Optimized performance for fast and seamless file sharing." />
                 </ListItem>
               </List>

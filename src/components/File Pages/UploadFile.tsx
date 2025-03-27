@@ -99,7 +99,7 @@ const FileUpload = observer(() => {
             <Typography variant="body2" sx={{ marginBottom: 2 }}>
               File selected: {file.name} </Typography>
            
-            <Button variant="outlined" color="error" onClick={handleCancel} startIcon={<Cancel />} sx={{ marginBottom: 2 }}>
+            <Button variant="outlined"  onClick={handleCancel} startIcon={<Cancel />} sx={{ marginBottom: 2, border: "1px solid #2be0dc" ,color: "#2be0dc"}}>
               Cancel Selection </Button>
           </Box>
         )}

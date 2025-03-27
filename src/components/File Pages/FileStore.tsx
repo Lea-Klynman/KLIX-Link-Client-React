@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { UserFile } from "../../types/UserFile";
 import axios from "axios";
+import { UserFile } from "../../types/UserFile";
 import userStore from "../User pages/userStore";
 
 class FileStore {
@@ -10,23 +10,45 @@ class FileStore {
   error: string | null = null;
   url: string = "http://localhost:3000/api/UserFile";
 
+
   constructor() {
     makeAutoObservable(this);
+    this.setupInterceptor();
+  }
+
+  private setupInterceptor() {
+    axios.interceptors.request.use((config) => {
+      const token = sessionStorage.getItem('token');
+      if (!config.headers["Content-Type"]){
+        config.headers.set("Content-Type", "application/json") ;
+      }
+      if (token) {
+        config.headers.set("Authorization", `Bearer ${token}`);
+      }
+      console.log(config.headers);  
+      
+      return config;
+    }, (error) => {
+      return Promise.reject(error);
+    });
   }
 
 
-
+ 
   async fetchFiles() {
     try {
       runInAction(() => {
         this.loading = true;
       });
 
-      const response = await axios.get(`${this.url}/user/${userStore.user.id ?? sessionStorage.getItem('userId')}`);
+      if(userStore.user.id == null) {
+        userStore.user.id =userStore.getUserId();
+      }
+      const response = await axios.get(`${this.url}/user/${userStore.user.id }`);
 
       runInAction(() => {
         this.files = response.data;
-        this.error = null; // מאפסים שגיאות ישנות אם הקריאה הצליחה
+        this.error = null; 
       });
     } catch (error: any) {
       runInAction(() => {
@@ -39,16 +61,15 @@ class FileStore {
     }
   }
 
-
-  async fetchFileShare(){
+  async fetchFileShare() {
     try {
       runInAction(() => {
         this.loading = true;
       });
-if(userStore.user.id == null){
-  userStore.user.id = parseInt(sessionStorage.getItem('userId') ?? '');
-  userStore.fetchUser(userStore.user.id);
-}
+      if (userStore.user.id == null) {
+        userStore.user.id = parseInt(sessionStorage.getItem('userId') ?? '');
+        userStore.fetchUser(userStore.user.id);
+      }
       const response = await axios.get(`${this.url}/filesShared/${userStore.user.email}`);
 
       runInAction(() => {
@@ -65,8 +86,8 @@ if(userStore.user.id == null){
       });
     }
 
-    }
- 
+  }
+
 
   async uploadFile(file: File, name: string, password: string, type: string) {
     const formData = new FormData();
@@ -75,7 +96,7 @@ if(userStore.user.id == null){
     formData.append("password", password);
     formData.append("fileType", type);
 
-    console.log(formData);
+    console.log(formData.get("fileName"));
     if (userStore.user.id == null) {
       userStore.user.id = parseInt(sessionStorage.getItem('userId') ?? '');
     }
@@ -84,13 +105,14 @@ if(userStore.user.id == null){
         this.loading = true;
       });
 
-      console.log(userStore.user.id + "user id=" + userStore.user);
 
       const response = await axios.post(
         `${this.url}/upload/${userStore.user.id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        formData
+        ,{ headers: { "Content-Type": "multipart/form-data" 
+        } }
       );
+
       console.log(response.data);
 
       await this.fetchFiles();
@@ -108,7 +130,7 @@ if(userStore.user.id == null){
   }
 
 
-  async deleteFile(fileId: number){
+  async deleteFile(fileId: number) {
     try {
       runInAction(() => {
         this.loading = true;
@@ -129,18 +151,17 @@ if(userStore.user.id == null){
     }
   }
 
+
   async editFile(fileId: number, newName: string) {
     try {
       runInAction(() => {
-        
+
         this.loading = true;
       }
       );
-      await axios.put(`${this.url}/${fileId}`, 
-       newName,{headers: {
-        "Content-Type": "application/json"
-      }
-    }
+      await axios.put(`${this.url}/${fileId}`,
+        newName
+
       );
       runInAction(() => {
         this.error = null;
@@ -155,26 +176,24 @@ if(userStore.user.id == null){
       });
       alert("File editing failed");
     }
-     }
+  }
+
+
   async shareFile(file: UserFile, email: string) {
     console.log(email);
-    
+
     try {
       runInAction(() => {
-        
+
         this.loading = true;
       });
-      const response = await axios.post(`${this.url}/Sharing/${file.id}`, email, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+      const response = await axios.put(`${this.url}/Sharing/${file.id}`, email);
       runInAction(() => {
         this.error = null;
         this.loading = false;
         console.log(response.data);
-        userStore.sendEmail(email, "File Shared", `${file.name} shared with you\npassword: ${response.data.password}`);
-        
+        userStore.sendEmail(email, `GKS ${userStore.user.name} Shared File with you`, `${userStore.user.name}shared with you the File : ${file.name} \nThe encrypted password is:\n ${response.data.password}`);
+
       });
 
     }
@@ -184,14 +203,17 @@ if(userStore.user.id == null){
       });
     }
   }
+
+
   async downloadFile(file: UserFile) {
     try {
       runInAction(() => {
         this.loading = true;
       });
-      const response = await axios.get(`${this.url}/download/${file.id}`, {
-        responseType: "blob",
-      });
+      const response = await axios.post(`${this.url}/decrypt-file/`,
+        { Id: file.id,Passwopassword: file.filePassword },
+        { responseType: "blob" }
+      );
       const blob = new Blob([response.data], { type: file.fileType });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -203,13 +225,40 @@ if(userStore.user.id == null){
         this.loading = false;
       });
 
-      // TODO: Add functionality to save file to device
     } catch (error: any) {
       runInAction(() => {
         this.error = error.response?.data?.message || "Error downloading file";
       });
     }
   }
+
+
+  async getSharedfile(email: string, id: number, password: string): Promise<Blob | undefined> {
+    try {
+        runInAction(() => {
+            this.loading = true;
+        });
+        
+        const response = await axios.post(
+            `${this.url}/CheckingIsAllowedView/${email}`,
+            { Id: id, password },
+            { responseType: "blob" }
+        );
+
+        if (response.status !== 200) throw new Error("Failed to fetch file");
+
+        return new Blob([response.data], { type: response.headers["content-type"] });
+    } catch (error) {
+        runInAction(() => {
+            this.error = "Error fetching shared file";
+        });
+        console.error("Error fetching file:", error);
+    } finally {
+        runInAction(() => {
+            this.loading = false;
+        });
+    }
+}
 }
 
 

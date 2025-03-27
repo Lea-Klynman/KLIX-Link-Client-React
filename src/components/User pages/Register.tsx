@@ -5,6 +5,7 @@ import { Roles } from '../../types/Roles';
 import { observer } from 'mobx-react-lite';
 import userStore from './userStore';
 import { Link, useNavigate } from 'react-router';
+import authStore from './authStore';
 const Register = observer((() => {
     const navigate = useNavigate(); 
 
@@ -82,7 +83,7 @@ const Register = observer((() => {
 
             try {
                 // await dispatch(registerUser(newUser)).unwrap();
-                await userStore.registerUser(newUser,[Roles.User]);
+                await authStore.registerUser(newUser,[Roles.User]);
                 navigate('/');
                 setAlertInfo({ severity: 'success', message: 'Successfully registered!' });
                 setIsDialogOpen(false);

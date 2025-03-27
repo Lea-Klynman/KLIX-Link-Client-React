@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router';
 import userStore from './userStore';
 import { Roles } from '../../types/Roles';
 import { observer } from 'mobx-react-lite';
+import authStore from './authStore';
 
 const Login = observer(() => {
 
@@ -42,7 +43,7 @@ const Login = observer(() => {
 
             try {
                 // await dispatch(loginUser({ email, password })).unwrap();
-                userStore.loginUser(email, password, [Roles.User]).then(() => {
+                authStore.loginUser(email, password, [Roles.User]).then(() => {
                     
                 console.log(userStore.user.id, userStore.token);
                 navigate('/');

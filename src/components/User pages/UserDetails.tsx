@@ -4,16 +4,16 @@ import { User } from "../../types/User";
 import userStore from "./userStore";
 import { observer } from "mobx-react-lite";
 
-if(userStore.user==null) {
-    console.log(userStore.user);
-    console.log(userStore.getUserId());
-    
-    
-    userStore.fetchUser(userStore.getUserId())
-}
+
 const UserDetails = observer(() => {
     
-    
+    if(userStore.user==null) {
+        console.log(userStore.user);
+        console.log(userStore.getUserId());
+        
+        
+        userStore.fetchUser(userStore.getUserId())
+    }
     const user: User =userStore.user
     
     function stringAvatar(name: string) {
@@ -23,7 +23,7 @@ const UserDetails = observer(() => {
         return {
             sx: {
                 bgcolor: "#FFFFFF",
-                color:"#ED3D48"
+                color:"#2be0dc",
             },
             children: `${name.split(' ')[0][0]}`,
         };
