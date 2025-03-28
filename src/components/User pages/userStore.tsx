@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import axios from 'axios';
 import { User } from '../../types/User';
 
-const url = "http://localhost:3000/api";
+const url = `${import.meta.env.VITE_API_URL}/api`;
 
 class UserStore {
     user = {} as User;

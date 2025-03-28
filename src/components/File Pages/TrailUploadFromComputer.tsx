@@ -1,14 +1,10 @@
-import { useState, useEffect, JSX } from "react";
+import { useState, useEffect } from "react";
 import { IconButton, Menu, MenuItem, Paper, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import { Description, InsertDriveFile, MoreVert, PictureAsPdf } from "@mui/icons-material";
+import {  MoreVert } from "@mui/icons-material";
 import WebViewer from "@pdftron/webviewer";
 import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
-const fileIcons: Record<string, JSX.Element> = {
-  "application/pdf": <PictureAsPdf fontSize="large" color="error" />,
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": <Description fontSize="large" color="primary" />,
-  default: <InsertDriveFile fontSize="large" color="disabled" />,
-};
+
 
 const TrailUploadFromComputer = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

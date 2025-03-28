@@ -5,7 +5,7 @@ import { User } from '../../types/User';
 import { Roles } from '../../types/Roles';
 import userStore from './userStore';
 
-const url = "http://localhost:3000/api";
+const url = `${import.meta.env.VITE_API_URL}/api`;
 
 class AuthStore {
     loading: boolean = false;

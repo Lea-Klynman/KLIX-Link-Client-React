@@ -8,7 +8,7 @@ class FileStore {
   fileShare: UserFile[] = [];
   loading: boolean = false;
   error: string | null = null;
-  url: string = "http://localhost:3000/api/UserFile";
+  url: string = `${import.meta.env.VITE_API_URL}/api/UserFile`;
 
 
   constructor() {

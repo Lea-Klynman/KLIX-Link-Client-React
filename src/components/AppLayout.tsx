@@ -1,9 +1,8 @@
-import { AppBar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
-import { Outlet, useNavigate } from "react-router";
+import { AppBar, Box, Container, Toolbar,  Typography } from "@mui/material";
+import { Outlet } from "react-router";
 import NavBar from "./NavBar";
 import logo from "../assets/logo.png";
-import UserDetails from "./User pages/UserDetails";
-import React from "react";
+
 import userStore from "./User pages/userStore";
 export default function appLayout() {
  

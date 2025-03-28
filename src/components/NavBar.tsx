@@ -78,14 +78,10 @@
 // };
 
 // export default NavBar;
-import { Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
-import { Menu as MenuIcon } from "@mui/icons-material";
+
 import { useState } from "react";
 import Sidebar from "./SideBar";
-import { Link, useNavigate } from "react-router";
-import userStore from "./User pages/userStore";
-import UserDetails from "./User pages/UserDetails";
-import React from "react";
+
 
 
 const NavBar = () => {
