@@ -7,7 +7,6 @@ import NoFileShare from "../Massages/NoFileShare";
 import { Box, Collapse, Grid2 as Grid, Typography } from "@mui/material";
 import FileCardShare from "./FileCardShare";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import TrailUploadFromComputer from "./TrailUploadFromComputer";
 
 const  ViewFile= observer(() =>{
 
@@ -71,7 +70,6 @@ const  ViewFile= observer(() =>{
           </Box>
         );
       })}
-      <TrailUploadFromComputer/>
     </Box>
   );
 }

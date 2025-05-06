@@ -29,9 +29,9 @@ async registerUser(user: Partial<User>, roles: Roles[]) {
                 sessionStorage.setItem('userId', userStore.user.id.toString());
                 sessionStorage.setItem("loginTime", Date.now().toString());
             }
-            const subject = "Welcome to KLIX-Link!";
-            const body = `Hello ${user.name},\n\nWelcome to KLIX-Link! Your account has been successfully created.\n\nBest regards,\nKLIX-Link Team`;
-            userStore.sendEmail(user.email!, subject, body);
+            const subject = "Get started with KLIX-Link!";
+            const message = `✅ Welcome to KLIX-Link! ✅\n\nDear ${userStore.user.name},\n\nThank you for registering with KLIX-Link! 🎉\n\nKLIX-Link is designed to provide **secure document storage and sharing**, ensuring your files remain protected at all times. Here’s what you can expect:\n\n🔒 **Advanced Encryption** – Your documents are encrypted before being stored, ensuring maximum security.\n📂 **Secure File Sharing** – Share files with confidence, knowing only authorized recipients can access them.\n🛡 **Privacy Protection** – Your sensitive data stays confidential, accessible only with your unique credentials.\n\nStart using KLIX-Link today and enjoy a **safe and seamless** document management experience.\n\nBest regards,\nThe KLIX-Link Security Team`;
+            userStore.sendEmail(user.email!, subject, message);
 
             this.loading = false;
         });

@@ -3,13 +3,13 @@ import axios from "axios";
 import { UserFile } from "../../types/UserFile";
 import userStore from "../User pages/userStore";
 
+
 class FileStore {
   files: UserFile[] = [];
   fileShare: UserFile[] = [];
   loading: boolean = false;
   error: string | null = null;
   url: string = `${import.meta.env.VITE_API_URL}/api/UserFile`;
-
 
   constructor() {
     makeAutoObservable(this);
@@ -61,6 +61,7 @@ class FileStore {
     }
   }
 
+
   async fetchFileShare() {
     try {
       runInAction(() => {
@@ -74,7 +75,7 @@ class FileStore {
 
       runInAction(() => {
         this.fileShare = response.data;
-        this.error = null; // מאפסים שגיאות ישנות אם הקריאה הצליחה
+        this.error = null; 
       });
     } catch (error: any) {
       runInAction(() => {
@@ -106,22 +107,21 @@ class FileStore {
       });
 
 
-      const response = await axios.post(
+     await axios.post(
         `${this.url}/upload/${userStore.user.id}`,
         formData
         ,{ headers: { "Content-Type": "multipart/form-data" 
         } }
       );
 
-      console.log(response.data);
 
       await this.fetchFiles();
-      alert("Upload successful");
+      return true;
     } catch (error: any) {
       runInAction(() => {
         this.error = error.response?.data?.message || "Error uploading file";
       });
-      alert("Upload failed");
+      return false;
     } finally {
       runInAction(() => {
         this.loading = false;
@@ -168,7 +168,6 @@ class FileStore {
       }
       );
       await this.fetchFiles();
-      alert("File edited successfully");
     }
     catch (error: any) {
       runInAction(() => {
@@ -187,12 +186,14 @@ class FileStore {
 
         this.loading = true;
       });
+      userStore.fetchUser(userStore.getUserId());
       const response = await axios.put(`${this.url}/Sharing/${file.id}`, email);
       runInAction(() => {
         this.error = null;
         this.loading = false;
-        console.log(response.data);
-        userStore.sendEmail(email, `GKS ${userStore.user.name} Shared File with you`, `${userStore.user.name}shared with you the File : ${file.name} \nThe encrypted password is:\n ${response.data.password}`);
+        const message = `Dear User,\n\n${userStore.user.name?? "Your Friend"} has securely shared a file with you via KLIX-Link.\n\nFile Name: ${file.name}\n\nTo access the file, please use the encrypted password provided below:\n\nEncrypted Password: ${response.data.password}\n\nFor your security, do not share this password with anyone.\n\nBest regards,\nKLIX-Link Security Team`;
+        const subject=`KLIX-Link: Secure File Shared with You by ${userStore.user.name}`
+        userStore.sendEmail(email, subject, message);
 
       });
 

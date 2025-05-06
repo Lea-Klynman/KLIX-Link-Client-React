@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router';
 import userStore from './components/User pages/userStore';
 import Dashboard from './components/User pages/Dashboard';
 import About from './components/About';
+import FailurePage from './components/Massages/FailurePage';
+import SuccecfullUpload from './components/Massages/SuccecfullUpload';
 
 
 const TOKEN_EXPIRATION_TIME = 1000* 60 * 60 * 2; 
@@ -59,7 +61,10 @@ export const router = createBrowserRouter([
       { path: 'filelist', element: <ProtectedRoute><FileList /></ProtectedRoute> },
       { path: 'view-file', element: <ProtectedRoute><ViewFile /></ProtectedRoute> },
       { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> }
+      { path: 'register', element: <Register /> },
+      { path: 'succesfulUpload', element: <ProtectedRoute><SuccecfullUpload/></ProtectedRoute> },
+      { path:"failUpload", element: <ProtectedRoute><FailurePage/></ProtectedRoute> },
+
     ],
   },
 ]);

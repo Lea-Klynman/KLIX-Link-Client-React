@@ -1,17 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { Button, TextField, Grid2 as Grid, Box, Alert,  } from '@mui/material';
+import { Button, TextField, Grid2 as Grid, Box, Alert, InputAdornment, IconButton, } from '@mui/material';
 import { Link, useNavigate } from 'react-router';
 import userStore from './userStore';
 import { Roles } from '../../types/Roles';
 import { observer } from 'mobx-react-lite';
 import authStore from './authStore';
-
+import { Eye, EyeOff } from "lucide-react"
 const Login = observer(() => {
 
     const navigate = useNavigate();
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const [alertInfo, setAlertInfo] = useState<{ severity: 'success' | 'error' | 'warning' | 'info', message: string } | null>(null);
+    const [showPassword, setShowPassword] = useState(false)
 
     const validateEmail = (email: string) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,6 +24,11 @@ const Login = observer(() => {
         if (password.length < 10) return 'Moderate';
         return 'Strong';
     };
+
+    const handleTogglePasswordVisibility = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword)
+    }
+
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,11 +50,11 @@ const Login = observer(() => {
             try {
                 // await dispatch(loginUser({ email, password })).unwrap();
                 authStore.loginUser(email, password, [Roles.User]).then(() => {
-                    
-                console.log(userStore.user.id, userStore.token);
-                navigate('/');
+
+                    console.log(userStore.user.id, userStore.token);
+                    navigate('/');
                 });
-                
+
                 setAlertInfo({ severity: 'success', message: 'Successfully logged in!' });
             } catch (error) {
                 setAlertInfo({ severity: 'error', message: 'Failed to login. Please check your credentials and try again.' });
@@ -71,9 +77,26 @@ const Login = observer(() => {
                     <Grid size={12}>
                         <TextField label="Email" inputRef={emailRef} fullWidth required />
                     </Grid>
-                    <Grid size={12}>
-                        <TextField type="password" label="Password" inputRef={passwordRef} fullWidth required />
-                    </Grid>
+                    <TextField
+                        type={showPassword ? "text" : "password"}
+                        label="Password"
+                        inputRef={passwordRef}
+                        fullWidth
+                        required
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleTogglePasswordVisibility}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                     <Grid size={12}>
                         <Button type="submit" variant="contained" color="primary" fullWidth>
                             Login

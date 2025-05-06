@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
         primary: {
-          main: "#555F69", // אפור-כחול עמוק
+          main: "#2c3e50", // אפור-כחול עמוק
         },
         secondary: {
           main: "#3C434E", // כחול-אפור כהה

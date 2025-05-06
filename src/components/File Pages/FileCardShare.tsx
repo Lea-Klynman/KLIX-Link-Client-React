@@ -1,50 +1,43 @@
-
-import { useState, useRef, useEffect, JSX } from "react";
+import { useState } from "react";
 import { UserFile } from "../../types/UserFile";
-import { IconButton, Menu, MenuItem, Paper, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material";
-import { Description, InsertDriveFile, MoreVert, PictureAsPdf } from "@mui/icons-material";
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+} from "@mui/material";
+import {
+  Close,
+  PictureAsPdf,
+  Visibility,
+} from "@mui/icons-material";
 import fileStore from "./FileStore";
-import { renderAsync } from "docx-preview";
+import InfoTooltip from "../Massages/InfoTooltip";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-const fileIcons: Record<string, JSX.Element> = {
-  "application/pdf": <PictureAsPdf fontSize="large" color="error" />,
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": <Description fontSize="large" color="primary" />,
-  default: <InsertDriveFile fontSize="large" color="disabled" />,
-};
-
-const FileCardShare = ({ file, filetype }: { file: UserFile, filetype: string }) => {
+const FileCardShare = ({ file, filetype }: { file: UserFile; filetype: string }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const [originalBlob, setOriginalBlob] = useState<Blob | null>(null);
-  const [docxRendered, setDocxRendered] = useState(false);
-  const docxContainerRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (docxContainerRef.current && fileUrl && !docxRendered && filetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-      const fetchFileContent = async () => {
-        try {
-          const arrayBuffer = await fileStore.getSharedfile(email, file.id, password);
-          if(docxContainerRef.current)
-          renderAsync(arrayBuffer, docxContainerRef.current, undefined)
-            .then(() => setDocxRendered(true))
-            .catch((error) => console.error("Error rendering DOCX:", error));
-        } catch (error) {
-          console.error("Error fetching DOCX file:", error);
-        }
-      };
-      fetchFileContent();
-    }
-  }, [fileUrl, docxRendered, email, password, file.id, filetype]);
 
   const handleCloseViewer = () => {
     if (fileUrl) {
       URL.revokeObjectURL(fileUrl);
       setFileUrl(null);
     }
-    setDocxRendered(false);
+    setOpenDialog(false);
   };
 
   const handleViewClick = () => {
@@ -58,20 +51,12 @@ const FileCardShare = ({ file, filetype }: { file: UserFile, filetype: string })
       if (!fileBlob) {
         throw new Error("Failed to fetch file: Blob is undefined");
       }
-      setOriginalBlob(fileBlob);
 
-      if (filetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-        const arrayBuffer = await fileBlob.arrayBuffer();
-        setFileUrl(null);  // Reset fileUrl before starting the DOCX render
-        if(docxContainerRef.current)
-        renderAsync(arrayBuffer, docxContainerRef.current, undefined)
-          .then(() => {
-            setDocxRendered(true);
-          })
-          .catch((error) => console.error("Error rendering DOCX:", error));
-      } else {
+      if (filetype === "application/pdf") {
         const fileURL = URL.createObjectURL(fileBlob);
         setFileUrl(fileURL);
+      } else {
+        alert("Viewing this file type is not supported.");
       }
     } catch (error) {
       console.error("Error fetching file:", error);
@@ -81,60 +66,78 @@ const FileCardShare = ({ file, filetype }: { file: UserFile, filetype: string })
   return (
     <>
       <Paper elevation={3} sx={{ p: 2, width: 200, textAlign: "center", position: "relative" }}>
-        {fileIcons[filetype] || fileIcons.default}
-        <Typography variant="subtitle1" fontWeight="bold" mt={1}>{file.name}</Typography>
+      <PictureAsPdf fontSize="large" color="error" />
+        <Typography variant="subtitle1" fontWeight="bold" mt={1}>
+          {file.name}
+        </Typography>
         <IconButton sx={{ position: "absolute", top: 5, right: 5 }} onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <MoreVert />
+          <Visibility />
         </IconButton>
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-          <MenuItem onClick={handleViewClick}>👀 View</MenuItem>
+          {filetype === "application/pdf" && <MenuItem onClick={handleViewClick}>View</MenuItem>}
         </Menu>
       </Paper>
 
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Enter Email & Password</DialogTitle>
         <DialogContent>
-          <TextField fullWidth margin="dense" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <TextField fullWidth margin="dense" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InfoTooltip
+                  info="Your personal email address to which the file was shared."
+                  icon="?"
+                />
+              ),
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InfoTooltip
+                  info="This is the password sent to you via email in the notification message about the shared file."
+                  icon="!"
+                />
+              ),
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button onClick={handleFetchFile} variant="contained">Submit</Button>
+          <Button onClick={handleFetchFile} variant="contained">
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
 
-      {(fileUrl || docxRendered) && (
-        <Dialog open={Boolean(fileUrl) || docxRendered} onClose={handleCloseViewer} fullWidth maxWidth="md">
-          <DialogTitle>File Viewer</DialogTitle>
-          <DialogContent>
-            {filetype === "application/pdf" ? (
-              <iframe src={fileUrl!} width="100%" height="500px"></iframe>
-            ) : filetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
-              <div ref={docxContainerRef} style={{ padding: "20px", backgroundColor: "#fff" }} />
-            ) : (
-              <Typography>File preview not supported, download instead.</Typography>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseViewer}>Close</Button>
-            <Button
-              onClick={() => {
-                if (originalBlob) {
-                  const downloadUrl = URL.createObjectURL(originalBlob);
-                  const link = document.createElement("a");
-                  link.href = downloadUrl;
-                  link.download = file.name;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }
-              }}
-              variant="contained"
-            >
-              Download
-            </Button>
-            <Button onClick={() => window.print()} variant="outlined">Print</Button>
-          </DialogActions>
+      {fileUrl&& (
+        <Dialog open={Boolean(fileUrl)} onClose={handleCloseViewer} fullWidth maxWidth="md" >
+         <DialogTitle>PDF Viewer</DialogTitle>
+         <IconButton onClick={handleCloseViewer}>
+    <Close />
+  </IconButton>
+  <DialogContent>
+    <div style={{ height: '600px' }}>
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+        <Viewer
+          fileUrl={fileUrl}
+          defaultScale={1}
+          plugins={[]}
+        />
+      </Worker>
+    </div>
+  </DialogContent>
         </Dialog>
       )}
     </>

@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { Button, TextField, Grid2 as Grid, Box, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, TextField, Grid2 as Grid, Box, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, InputAdornment, IconButton } from '@mui/material';
 import { User } from '../../types/User';
 import { Roles } from '../../types/Roles';
 import { observer } from 'mobx-react-lite';
 import userStore from './userStore';
 import { Link, useNavigate } from 'react-router';
 import authStore from './authStore';
+import { Eye, EyeOff } from 'lucide-react';
+import InfoTooltip from '../Massages/InfoTooltip';
 const Register = observer((() => {
     const navigate = useNavigate(); 
 
@@ -16,7 +18,11 @@ const Register = observer((() => {
     const [verificationCode, setVerificationCode] = useState<string>('');
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [inputCode, setInputCode] = useState<string>('');
+    const [showPassword, setShowPassword] = useState(false)
 
+    const handleTogglePasswordVisibility = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword)
+      }
     const validateEmail = (email: string) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
@@ -26,13 +32,10 @@ const Register = observer((() => {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         setVerificationCode(code);
         const subject=`Verify your email for KLIX-Link ${code}`
-        const body=`Hello, ${nameRef.current?.value}. Your verification code for KLIX-Link is ${code}.\n Please use it to complete your registration process.`
-        userStore.sendEmail(email, subject, body);
-        console.log(`Verification code sent to ${email}: ${code}`);
+        const body=`Hello, ${nameRef.current?.value}. Your verification code for KLIX-Link is ${verificationCode}.\n Please use it to complete your registration process.`
+        console.log(`Verification code sent to ${email}: ${verificationCode}`);
         setIsDialogOpen(true);
         userStore.sendEmail(email, subject, body);
-        console.log(`Verification code sent to ${email}: ${code}`);
-        setIsDialogOpen(true);
     };
 
     const validatePasswordStrength = (password: string) => {
@@ -66,7 +69,7 @@ const Register = observer((() => {
     };
 
     const handleVerifyCode = async () => {
-        if (inputCode === verificationCode) {
+        if (inputCode== verificationCode) {
             const name = nameRef.current?.value;
             const email = emailRef.current?.value;
             const password = passwordRef.current?.value;
@@ -82,7 +85,6 @@ const Register = observer((() => {
             };
 
             try {
-                // await dispatch(registerUser(newUser)).unwrap();
                 await authStore.registerUser(newUser,[Roles.User]);
                 navigate('/');
                 setAlertInfo({ severity: 'success', message: 'Successfully registered!' });
@@ -111,9 +113,26 @@ const Register = observer((() => {
                     <Grid size={12}>
                         <TextField label="Email" inputRef={emailRef} fullWidth required />
                     </Grid>
-                    <Grid size={12}>
-                        <TextField type="password" label="Password" inputRef={passwordRef} fullWidth required />
-                    </Grid>
+                    <TextField
+              type={showPassword ? "text" : "password"}
+              label="Password"
+              inputRef={passwordRef}
+              fullWidth
+              required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleTogglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
                     <Grid size={12}>
                         <Button type="submit" variant="contained" color="primary" fullWidth>
                             Register
@@ -126,8 +145,14 @@ const Register = observer((() => {
             <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
                 <DialogTitle>Verify Your Email</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText sx={{ marginBottom: 2,display: 'flex', alignItems: 'space-around' }}>
                         Please enter the verification code sent to your email.
+                        <InfoTooltip
+  info="The verification code email might land in your spam folder by mistake.
+Please check your spam/junk folder if you don’t see it within a few minutes.
+"
+  icon="!"
+/>
                     </DialogContentText>
                     <TextField
                         autoFocus

@@ -6,7 +6,7 @@ import logo from "../assets/logo.png";
 const About: React.FC = () => {
   return (
     <Box sx={{ padding: 3 }}>
-      <Card sx={{ maxWidth: 1200, margin: 'auto' }}>
+      <Card sx={{ maxWidth: 1000, margin: 'auto' ,backgroundColor: "#f4f6f8" }}>
         <CardHeader
           title={<Typography variant="h4">Secure File Management</Typography>}
           subheader={<Typography variant="h6">Efficient and Safe File Sharing</Typography>}
@@ -24,24 +24,24 @@ const About: React.FC = () => {
               </Typography>
               <Typography variant="h6" gutterBottom>Our Core Principles</Typography>
               <List>
-                <ListItem>
-                  <ListItemIcon><Lock sx={{ color: "#2be0dc"}} /></ListItemIcon>
+                <ListItem sx={{ padding: 1 ,backgroundColor: "#f0f0f0"}}>
+                  <ListItemIcon><Lock sx={{ color: "#e14a4acf"}} /></ListItemIcon>
                   <ListItemText primary="Security - We use state-of-the-art encryption to protect your data." />
                 </ListItem>
-                <ListItem>
+                <ListItem  sx={{ padding: 1 }}>
                   <ListItemIcon><VisibilityOff sx={{ color: "#2be0dc"}} /></ListItemIcon>
                   <ListItemText primary="Confidentiality - Your files remain private and accessible only to authorized users." />
                 </ListItem>
-                <ListItem>
-                  <ListItemIcon><Sync sx={{ color: "#2be0dc"}} /></ListItemIcon>
+                <ListItem sx={{ padding: 1 ,backgroundColor: "#f0f0f0"}}>
+                  <ListItemIcon><Sync sx={{ color: "#e14a4acf"}} /></ListItemIcon>
                   <ListItemText primary="Reliability - Our platform ensures uninterrupted and secure file access." />
                 </ListItem>
-                <ListItem>
+                <ListItem sx={{ padding: 1 }}>
                   <ListItemIcon><Verified sx={{color: "#2be0dc"}} /></ListItemIcon>
                   <ListItemText primary="Trust - We are committed to transparency and strong authentication measures." />
                 </ListItem>
-                <ListItem>
-                  <ListItemIcon><Speed sx={{color: "#2be0dc"}}/></ListItemIcon>
+                <ListItem sx={{ padding: 1 ,backgroundColor: "#f0f0f0"}}>
+                  <ListItemIcon><Speed sx={{color: "#e14a4acf"}}/></ListItemIcon>
                   <ListItemText primary="Efficiency - Optimized performance for fast and seamless file sharing." />
                 </ListItem>
               </List>
