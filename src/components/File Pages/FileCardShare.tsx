@@ -12,6 +12,7 @@ import {
   DialogActions,
   Button,
   TextField,
+  Box,
 } from "@mui/material";
 import {
   Close,
@@ -23,6 +24,7 @@ import InfoTooltip from "../Massages/InfoTooltip";
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { DownloadIcon } from "lucide-react";
 
 const FileCardShare = ({ file, filetype }: { file: UserFile; filetype: string }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -44,7 +46,9 @@ const FileCardShare = ({ file, filetype }: { file: UserFile; filetype: string })
     setAnchorEl(null);
     setOpenDialog(true);
   };
-
+  const handleDownload = async () => {
+    await fileStore.downloadFile(file, "encrypted/file");
+  };
   const handleFetchFile = async () => {
     try {
       const fileBlob = await fileStore.getSharedfile(email, file.id, password);
@@ -76,6 +80,12 @@ const FileCardShare = ({ file, filetype }: { file: UserFile; filetype: string })
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
           {filetype === "application/pdf" && <MenuItem onClick={handleViewClick}>View</MenuItem>}
         </Menu>
+        <Box mt={2} display="flex" justifyContent="left" gap={2}>
+          
+          <IconButton onClick={handleDownload} title="Download File">
+            <DownloadIcon color="black" fontSize="action" />
+          </IconButton>
+        </Box>
       </Paper>
 
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>

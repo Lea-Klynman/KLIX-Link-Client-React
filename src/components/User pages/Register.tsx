@@ -32,8 +32,8 @@ const Register = observer((() => {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         setVerificationCode(code);
         const subject=`Verify your email for KLIX-Link ${code}`
-        const body=`Hello, ${nameRef.current?.value}. Your verification code for KLIX-Link is ${verificationCode}.\n Please use it to complete your registration process.`
-        console.log(`Verification code sent to ${email}: ${verificationCode}`);
+        const body=`Hello, ${nameRef.current?.value}. Your verification code for KLIX-Link is ${code}.\n Please use it to complete your registration process.`
+        console.log(`Verification code sent to ${email}: ${code}`);
         setIsDialogOpen(true);
         userStore.sendEmail(email, subject, body);
     };
@@ -69,7 +69,10 @@ const Register = observer((() => {
     };
 
     const handleVerifyCode = async () => {
-        if (inputCode== verificationCode) {
+        console.log('Verification code:', verificationCode);
+        console.log('Input code:', inputCode);
+        
+        if (inputCode=== verificationCode) {
             const name = nameRef.current?.value;
             const email = emailRef.current?.value;
             const password = passwordRef.current?.value;
@@ -95,6 +98,8 @@ const Register = observer((() => {
             }
         } else {
             setAlertInfo({ severity: 'error', message: 'Verification code is incorrect.' });
+            setInputCode('');
+            setIsDialogOpen(false);
         }
     };
 
@@ -147,12 +152,7 @@ const Register = observer((() => {
                 <DialogContent>
                     <DialogContentText sx={{ marginBottom: 2,display: 'flex', alignItems: 'space-around' }}>
                         Please enter the verification code sent to your email.
-                        <InfoTooltip
-  info="The verification code email might land in your spam folder by mistake.
-Please check your spam/junk folder if you don’t see it within a few minutes.
-"
-  icon="!"
-/>
+
                     </DialogContentText>
                     <TextField
                         autoFocus
@@ -161,6 +161,16 @@ Please check your spam/junk folder if you don’t see it within a few minutes.
                         fullWidth
                         value={inputCode}
                         onChange={(e) => setInputCode(e.target.value)}
+                        InputProps={{
+                            endAdornment: (
+                                <InfoTooltip
+                                info="The verification code email might land in your spam folder by mistake.
+                              Please check your spam/junk folder if you don’t see it within a few minutes.
+                              "
+                                icon="!"
+                              />
+                              ),
+                        }}
                     />
                 </DialogContent>
                 <DialogActions>

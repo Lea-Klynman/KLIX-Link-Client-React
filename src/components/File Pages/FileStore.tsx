@@ -206,13 +206,13 @@ class FileStore {
   }
 
 
-  async downloadFile(file: UserFile) {
+  async downloadFile(file: UserFile,urlreqest: string) {
     try {
       runInAction(() => {
         this.loading = true;
       });
-      const response = await axios.post(`${this.url}/decrypt-file/`,
-        { Id: file.id,Passwopassword: file.filePassword },
+      const response = await axios.post(`${this.url}/${urlreqest}`,
+        { Id: file.id,Password: file.filePassword },
         { responseType: "blob" }
       );
       const blob = new Blob([response.data], { type: file.fileType });

@@ -155,8 +155,6 @@ class UserStore {
         this.loading = true;
         this.error = null;
         try {
-            console.log(to, subject, body);
-
             await axios.post(`${url}/Email/send`, { to, subject, body });
             runInAction(() => {
                 this.loading = false;
