@@ -1,7 +1,12 @@
 import { Box, Typography, Button } from '@mui/material';
 import { Security, Upload } from '@mui/icons-material';
+import { useNavigate } from 'react-router';
 
 export default function Nofile() {
+  const navigate = useNavigate(); 
+ const handleUploadClick = () => {
+    navigate('/upload');
+  }
   return (
     <Box 
       sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '70vh', backgroundColor: '#f4f6f8', padding: 3, borderRadius: 2, boxShadow: 2, textAlign: 'center',
@@ -18,7 +23,7 @@ export default function Nofile() {
         variant="contained" 
         color="primary" 
         startIcon={<Upload />} 
-        href="/upload"
+       onClick={handleUploadClick}
         sx={{ textTransform: 'none', borderRadius: 1, paddingX: 3, paddingY: 1.5,
         }}
       >

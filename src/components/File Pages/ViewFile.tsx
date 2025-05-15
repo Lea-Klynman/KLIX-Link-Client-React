@@ -4,9 +4,10 @@ import fileStore from "./FileStore";
 import { useEffect, useState } from "react";
 import { UserFile } from "../../types/UserFile";
 import NoFileShare from "../Massages/NoFileShare";
-import { Box, Collapse, Grid2 as Grid, Typography } from "@mui/material";
+import { Box, Button, Collapse, Grid2 as Grid, Typography } from "@mui/material";
 import FileCardShare from "./FileCardShare";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Link } from "react-router";
 
 const  ViewFile= observer(() =>{
 
@@ -51,6 +52,8 @@ const  ViewFile= observer(() =>{
         const isOpen = !openFiles[date] || false;
         return (
           <Box key={date} sx={{ mb: 3 }}>
+           <Button type="button" component={Link} to='/downloadDeskTop'> Download KLIX-Link DeskTop</Button>
+
             <Typography
               variant="h6"
               onClick={() => handleToggle(date)}

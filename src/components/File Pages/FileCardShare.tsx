@@ -69,6 +69,7 @@ const FileCardShare = ({ file, filetype }: { file: UserFile; filetype: string })
 
   return (
     <>
+
       <Paper elevation={3} sx={{ p: 2, width: 200, textAlign: "center", position: "relative" }}>
       <PictureAsPdf fontSize="large" color="error" />
         <Typography variant="subtitle1" fontWeight="bold" mt={1}>

@@ -12,6 +12,7 @@ import Dashboard from './components/User pages/Dashboard';
 import About from './components/About';
 import FailurePage from './components/Massages/FailurePage';
 import SuccecfullUpload from './components/Massages/SuccecfullUpload';
+import DeskTopDownload from './components/DeskTopDownload';
 
 
 const TOKEN_EXPIRATION_TIME = 1000* 60 * 60 * 2; 
@@ -63,7 +64,8 @@ export const router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'succesfulUpload', element: <ProtectedRoute><SuccecfullUpload/></ProtectedRoute> },
-      { path:"failUpload", element: <ProtectedRoute><FailurePage/></ProtectedRoute> },
+      { path:'failUpload', element: <ProtectedRoute><FailurePage/></ProtectedRoute> },
+    {path:'downloadDeskTop',element: <DeskTopDownload/>},
 
     ],
   },
