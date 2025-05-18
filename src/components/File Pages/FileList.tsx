@@ -35,7 +35,6 @@ if(fileStore.files?.length === 0) return <Nofile/>;
     return acc;
   }, {} as Record<string, UserFile[]>);
 
-  // פונקציה לשינוי מצב התפשטות של קובץ לפי תאריך
   const handleToggle = (date: string) => {
     setOpenFiles(prevState => ({
       ...prevState,

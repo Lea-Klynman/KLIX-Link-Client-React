@@ -3,20 +3,19 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
         primary: {
-          main: "#2c3e50", // אפור-כחול עמוק
+          main: "#2c3e50", 
         },
         secondary: {
-          main: "#3C434E", // כחול-אפור כהה
+          main: "#3C434E",
         },
         background: {
-          default: "#545E68", // רקע כללי אפור-כחלחל
+          default: "#545E68",
           paper:"#ffffff",
-          // "#38BDF8", // רקע של כרטיסים/אלמנטים
-          /*#535D67 */
+          
         },
         text: {
-          primary: "#3D4450", // צבע טקסט כהה#38BDF8
-          secondary: "#2be0dc", // צבע טקסט נוסף#38BDF8
+          primary: "#3D4450",
+          secondary: "#2be0dc",
         },
       },
       typography: {

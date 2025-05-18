@@ -6,7 +6,7 @@ const FailurePage = () => {
   const navigate = useNavigate();
 
   const goToUploadPage = () => {
-    navigate('/upload');  // מעביר לדף העלאת הקובץ
+    navigate('/upload');  
   };
 
   return (

@@ -11,7 +11,7 @@ class FileStore {
   error: string | null = null;
   url: string = `${import.meta.env.VITE_API_URL}/api/UserFile`;
 
-  navigate: ((path: string) => void) | null = null; // 👈 נווט חיצוני
+  navigate: ((path: string) => void) | null = null; 
 
   constructor() {
     makeAutoObservable(this);
@@ -245,7 +245,7 @@ class FileStore {
   async getPresignedDownloadUrl(): Promise<string | null> {
     try {
       const response = await axios.get(`${this.url}/generate/presigned/url?fileName=KLIXLinkDesktop%20Setup%201.0.0.exe`);
-      return response.data.url; // נניח שהשרת מחזיר אובייקט: { url: "..." }
+      return response.data.url; 
     } catch (error) {
       console.error("Failed to fetch presigned URL", error);
       return null;

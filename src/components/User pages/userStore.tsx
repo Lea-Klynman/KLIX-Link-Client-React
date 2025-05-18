@@ -9,7 +9,7 @@ class UserStore {
     token: string | null = sessionStorage.getItem('token');
     loading: boolean = false;
     error: string | null = null;
-    navigate: ((path: string) => void) | null = null; // 👈 נווט חיצוני
+    navigate: ((path: string) => void) | null = null; 
 
     constructor() {
         makeAutoObservable(this);
@@ -54,12 +54,12 @@ class UserStore {
     setSessionStorage(token: string | null) {
         this.token = token;
         if (token) {
-            sessionStorage.setItem("token", token); // שמירה לאחר התחברות
+            sessionStorage.setItem("token", token); 
             sessionStorage.setItem('userId', this.user.id.toString());
             sessionStorage.setItem("loginTime", Date.now().toString());
             this.fetchUser(parseInt(sessionStorage.getItem('userId') as string));
         } else {
-            sessionStorage.removeItem("token"); // ניקוי לאחר יציאה
+            sessionStorage.removeItem("token"); 
             sessionStorage.removeItem('userId');
             sessionStorage.removeItem("loginTime");
         }

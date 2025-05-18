@@ -5,9 +5,10 @@ import React from "react";
 import userStore from "./User pages/userStore";
 import UserDetails from "./User pages/UserDetails";
 import { observer } from "mobx-react-lite";
+import { CloudDownload } from "lucide-react";
 
-const drawerWidth = 60; // Sidebar width when collapsed
-const expandedDrawerWidth = 240; // Sidebar width when expanded
+const drawerWidth = 60; 
+const expandedDrawerWidth = 240; 
 
 const Sidebar = observer(({ open, onToggle }: { open: boolean; onToggle: () => void }) => {
   const navigate = useNavigate();
@@ -74,6 +75,12 @@ const Sidebar = observer(({ open, onToggle }: { open: boolean; onToggle: () => v
           <ListItemButton component={Link} to='/view-file'>
             <ListItemIcon sx={{ color: "#FFFFFF" }}><Description /></ListItemIcon>
             {open && <ListItemText primary="Shared Files" />}
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to='/downloadDeskTop'>
+            <ListItemIcon sx={{ color: "#FFFFFF" }}><CloudDownload /></ListItemIcon>
+            {open && <ListItemText primary="KLIX-Link-Desktop" />}
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

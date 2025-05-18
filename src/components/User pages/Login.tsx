@@ -48,7 +48,6 @@ const Login = observer(() => {
             }
 
             try {
-                // await dispatch(loginUser({ email, password })).unwrap();
               await  authStore.loginUser(email, password, [Roles.User]).then(() => {
 
                     console.log(userStore.user.id, userStore.token);
