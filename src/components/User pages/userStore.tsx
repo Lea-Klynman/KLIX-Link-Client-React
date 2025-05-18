@@ -9,12 +9,27 @@ class UserStore {
     token: string | null = sessionStorage.getItem('token');
     loading: boolean = false;
     error: string | null = null;
+    navigate: ((path: string) => void) | null = null; // 👈 נווט חיצוני
 
     constructor() {
         makeAutoObservable(this);
         this.setupInterceptor();
     }
-
+    setNavigator(navigate: (path: string) => void) {
+        this.navigate = navigate;
+      }
+    
+      private handleHttpError(error: any, defaultMessage: string) {
+        const status = error.response?.status;
+        if (status === 401 && this.navigate) {
+          this.navigate("/unauthorized");
+        } else if (status === 418 && this.navigate) {
+          this.navigate("/netfree-error");
+        } else {
+          return error.response?.data?.message || defaultMessage;
+        }
+      }
+   
     private setupInterceptor() {
         axios.interceptors.request.use((config) => {
             const token = sessionStorage.getItem('token');
@@ -68,11 +83,15 @@ class UserStore {
             const response = await axios.get(`${url}/User/${userId}`);
             runInAction(() => {
                 this.user = response.data;
-                this.loading = false;
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = error.message || "Failed to load user";
+                this.error = this.handleHttpError(error, "Failed to load files");
+            });
+
+        }
+        finally {
+            runInAction(() => {
                 this.loading = false;
             });
         }
@@ -86,11 +105,15 @@ class UserStore {
             const response = await axios.get(`${url}/User/${email}`);
             runInAction(() => {
                 this.user = response.data;
-                this.loading = false;
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = error.message || "Failed to get user by email";
+                this.error = this.handleHttpError(error, "Failed to load files");
+            });
+
+        }
+        finally {
+            runInAction(() => {
                 this.loading = false;
             });
         }
@@ -104,11 +127,15 @@ class UserStore {
             const response = await axios.put(`${url}/name/${id}`, { name });
             runInAction(() => {
                 this.user.name = response.data.name;
-                this.loading = false;
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = error.message || "Failed to update name";
+                this.error = this.handleHttpError(error, "Failed to load files");
+            });
+
+        }
+        finally {
+            runInAction(() => {
                 this.loading = false;
             });
         }
@@ -121,11 +148,15 @@ class UserStore {
         try {
             await axios.put(`${url}/password/${id}`, { password });
             runInAction(() => {
-                this.loading = false;
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = error.message || "Failed to update password";
+                this.error = this.handleHttpError(error, "Failed to load files");
+            });
+
+        }
+        finally {
+            runInAction(() => {
                 this.loading = false;
             });
         }
@@ -140,11 +171,15 @@ class UserStore {
             runInAction(() => {
                 this.user = {} as User;
                 this.token = null;
-                this.loading = false;
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = error.message || "Failed to delete user";
+                this.error = this.handleHttpError(error, "Failed to load files");
+            });
+
+        }
+        finally {
+            runInAction(() => {
                 this.loading = false;
             });
         }
@@ -157,11 +192,15 @@ class UserStore {
         try {
             await axios.post(`${url}/Email/send`, { to, subject, body });
             runInAction(() => {
-                this.loading = false;
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = error.message || "Failed to send email";
+                this.error = this.handleHttpError(error, "Failed to load files");
+            });
+
+        }
+        finally {
+            runInAction(() => {
                 this.loading = false;
             });
         }

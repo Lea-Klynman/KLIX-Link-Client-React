@@ -11,9 +11,26 @@ class FileStore {
   error: string | null = null;
   url: string = `${import.meta.env.VITE_API_URL}/api/UserFile`;
 
+  navigate: ((path: string) => void) | null = null; // 👈 נווט חיצוני
+
   constructor() {
     makeAutoObservable(this);
     this.setupInterceptor();
+  }
+
+  setNavigator(navigate: (path: string) => void) {
+    this.navigate = navigate;
+  }
+
+  private handleHttpError(error: any, defaultMessage: string) {
+    const status = error.response?.status;
+    if (status === 401 && this.navigate) {
+      this.navigate("/unauthorized");
+    } else if (status === 418 && this.navigate) {
+      this.navigate("/netfree-error");
+    } else {
+      return error.response?.data?.message || defaultMessage;
+    }
   }
 
   private setupInterceptor() {
@@ -52,13 +69,15 @@ class FileStore {
       });
     } catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error fetching files";
+          this.error = this.handleHttpError(error, "Failed to load files");
       });
-    } finally {
+
+  }
+  finally {
       runInAction(() => {
-        this.loading = false;
+          this.loading = false;
       });
-    }
+  }
   }
 
 
@@ -79,13 +98,15 @@ class FileStore {
       });
     } catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error fetching files";
+          this.error = this.handleHttpError(error, "Failed to load files");
       });
-    } finally {
+
+  }
+  finally {
       runInAction(() => {
-        this.loading = false;
+          this.loading = false;
       });
-    }
+  }
 
   }
 
@@ -119,14 +140,16 @@ class FileStore {
       return true;
     } catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error uploading file";
+          this.error = this.handleHttpError(error, "Failed to load files");
       });
       return false;
-    } finally {
+
+  }
+  finally {
       runInAction(() => {
-        this.loading = false;
+          this.loading = false;
       });
-    }
+  }
   }
 
 
@@ -142,13 +165,15 @@ class FileStore {
       await this.fetchFiles();
     } catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error deleting file";
+          this.error = this.handleHttpError(error, "Failed to load files");
       });
-    } finally {
+
+  }
+  finally {
       runInAction(() => {
-        this.loading = false;
+          this.loading = false;
       });
-    }
+  }
   }
 
 
@@ -171,10 +196,15 @@ class FileStore {
     }
     catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error editing file";
+          this.error = this.handleHttpError(error, "Failed to load files");
       });
-      alert("File editing failed");
-    }
+
+  }
+  finally {
+      runInAction(() => {
+          this.loading = false;
+      });
+  }
   }
 
 
@@ -200,11 +230,27 @@ class FileStore {
     }
     catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error sharing file";
+          this.error = this.handleHttpError(error, "Failed to load files");
       });
-    }
+
+  }
+  finally {
+      runInAction(() => {
+          this.loading = false;
+      });
+  }
   }
 
+
+  async getPresignedDownloadUrl(): Promise<string | null> {
+    try {
+      const response = await axios.get(`${this.url}/generate/presigned/url?fileName=KLIXLinkDesktop%20Setup%201.0.0.exe`);
+      return response.data.url; // נניח שהשרת מחזיר אובייקט: { url: "..." }
+    } catch (error) {
+      console.error("Failed to fetch presigned URL", error);
+      return null;
+    }
+  }
 
   async downloadFile(file: UserFile,urlreqest: string) {
     try {
@@ -226,11 +272,18 @@ class FileStore {
         this.loading = false;
       });
 
-    } catch (error: any) {
+    } 
+    catch (error: any) {
       runInAction(() => {
-        this.error = error.response?.data?.message || "Error downloading file";
+          this.error = this.handleHttpError(error,"Error downloading file");
       });
-    }
+
+  }
+  finally {
+      runInAction(() => {
+          this.loading = false;
+      });
+  }
   }
 
 
@@ -249,16 +302,17 @@ class FileStore {
         if (response.status !== 200) throw new Error("Failed to fetch file");
 
         return new Blob([response.data], { type: response.headers["content-type"] });
-    } catch (error) {
-        runInAction(() => {
-            this.error = "Error fetching shared file";
-        });
-        console.error("Error fetching file:", error);
-    } finally {
-        runInAction(() => {
-            this.loading = false;
-        });
-    }
+    } catch (error: any) {
+      runInAction(() => {
+          this.error = this.handleHttpError(error, "Failed to load filesError fetching shared file");
+      });
+
+  }
+  finally {
+      runInAction(() => {
+          this.loading = false;
+      });
+  }
 }
 }
 

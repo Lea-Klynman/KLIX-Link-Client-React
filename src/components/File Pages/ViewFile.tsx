@@ -4,10 +4,13 @@ import fileStore from "./FileStore";
 import { useEffect, useState } from "react";
 import { UserFile } from "../../types/UserFile";
 import NoFileShare from "../Massages/NoFileShare";
-import { Box, Button, Collapse, Grid2 as Grid, Typography } from "@mui/material";
+import { Box, Button, Collapse, Grid2 as Grid, Paper, Typography } from "@mui/material";
 import FileCardShare from "./FileCardShare";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Link } from "react-router";
+import { CloudDownloadIcon } from "lucide-react";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
 
 const  ViewFile= observer(() =>{
 
@@ -38,7 +41,6 @@ const  ViewFile= observer(() =>{
     return acc;
   }, {} as Record<string, UserFile[]>);
 
-  // פונקציה לשינוי מצב התפשטות של קובץ לפי תאריך
   const handleToggle = (date: string) => {
     setOpenFiles(prevState => ({
       ...prevState,
@@ -52,8 +54,42 @@ const  ViewFile= observer(() =>{
         const isOpen = !openFiles[date] || false;
         return (
           <Box key={date} sx={{ mb: 3 }}>
-           <Button type="button" component={Link} to='/downloadDeskTop'> Download KLIX-Link DeskTop</Button>
+ <Paper
+      elevation={2}
+      sx={{
+        border: "2px solid #e0e0e0",
+        backgroundColor: "#f9f9f9",
+        p: 4,
+        borderRadius: 4,
+        maxWidth: 600,
+        margin: "20px auto",
+      }}
+    >
+      <Box display="flex" alignItems="center" mb={2}>
+        <WarningAmberIcon color="warning" sx={{ fontSize: 40, mr: 2 }} />
+        <Typography variant="h6" fontWeight="bold">
+          To view your encrypted document, please download KLIX-Link Desktop
+        </Typography>
+      </Box>
 
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        The KLIX-Link Desktop application is required for secure decryption and display
+        of encrypted files. Please download and install it to proceed.
+      </Typography>
+
+      <Box textAlign="center">
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          component={Link}
+          to="/downloadDeskTop"
+          startIcon={<CloudDownloadIcon />}
+        >
+          Download KLIX-Link Desktop
+        </Button>
+      </Box>
+    </Paper>
             <Typography
               variant="h6"
               onClick={() => handleToggle(date)}

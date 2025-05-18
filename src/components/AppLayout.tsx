@@ -7,6 +7,8 @@ import userStore from "./User pages/userStore";
 import { useEffect } from "react";
 import EmailIcon from "./Massages/EmailIcon";
 import GitHubIcon from '@mui/icons-material/GitHub';
+import fileStore from "./File Pages/FileStore";
+
 
 export default function appLayout() {
 const navigate=useNavigate();
@@ -16,6 +18,10 @@ const navigate=useNavigate();
     }
   }, [userStore.token]);
  
+   useEffect(() => {
+     fileStore.setNavigator(navigate);
+     userStore.setNavigator(navigate);
+   }, [navigate]);
   return (
     <>
      <AppBar style={{flexGrow: 1,display:'flex',flexDirection:'row-reverse'}}>

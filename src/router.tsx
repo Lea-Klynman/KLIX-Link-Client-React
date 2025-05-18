@@ -13,6 +13,8 @@ import About from './components/About';
 import FailurePage from './components/Massages/FailurePage';
 import SuccecfullUpload from './components/Massages/SuccecfullUpload';
 import DeskTopDownload from './components/DeskTopDownload';
+import NetfreeErrorPage from './components/Massages/Netfree-error';
+import UnauthorizedPage from './components/Massages/Unauthorized';
 
 
 const TOKEN_EXPIRATION_TIME = 1000* 60 * 60 * 2; 
@@ -65,6 +67,8 @@ export const router = createBrowserRouter([
       { path: 'register', element: <Register /> },
       { path: 'succesfulUpload', element: <ProtectedRoute><SuccecfullUpload/></ProtectedRoute> },
       { path:'failUpload', element: <ProtectedRoute><FailurePage/></ProtectedRoute> },
+      { path:'netfree-error', element: <ProtectedRoute><NetfreeErrorPage/></ProtectedRoute> },
+      { path:'unauthorized', element: <ProtectedRoute><UnauthorizedPage/></ProtectedRoute> },
     {path:'downloadDeskTop',element: <DeskTopDownload/>},
 
     ],
