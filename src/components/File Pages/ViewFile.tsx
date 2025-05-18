@@ -50,11 +50,7 @@ const  ViewFile= observer(() =>{
 
   return (
     <Box sx={{ p: 3 }}>
-      {groupedFiles && Object.entries(groupedFiles).map(([date, files]) => {
-        const isOpen = !openFiles[date] || false;
-        return (
-          <Box key={date} sx={{ mb: 3 }}>
- <Paper
+      <Paper
       elevation={2}
       sx={{
         border: "2px solid #e0e0e0",
@@ -90,6 +86,11 @@ const  ViewFile= observer(() =>{
         </Button>
       </Box>
     </Paper>
+      {groupedFiles && Object.entries(groupedFiles).map(([date, files]) => {
+        const isOpen = !openFiles[date] || false;
+        return (
+          <Box key={date} sx={{ mb: 3 }}>
+ 
             <Typography
               variant="h6"
               onClick={() => handleToggle(date)}
