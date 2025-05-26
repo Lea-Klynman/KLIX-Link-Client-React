@@ -50,7 +50,16 @@ class FileStore {
     });
   }
 
-
+  private ensureUserId() {
+    if (!userStore.user.id) {
+      const userIdFromSession = sessionStorage.getItem("userId");
+      if (userIdFromSession) {
+        userStore.user.id = parseInt(userIdFromSession);
+      } else {
+        userStore.getUserId();
+      }
+    }
+  }
  
   async fetchFiles() {
     try {
@@ -58,9 +67,8 @@ class FileStore {
         this.loading = true;
       });
 
-      if(userStore.user.id == null) {
-        userStore.user.id =userStore.getUserId();
-      }
+      this.ensureUserId();
+
       const response = await axios.get(`${this.url}/user/${userStore.user.id }`);
 
       runInAction(() => {
@@ -69,7 +77,7 @@ class FileStore {
       });
     } catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load files");
+          this.error = this.handleHttpError(error,  "Failed to fetch  files");
       });
 
   }
@@ -86,10 +94,8 @@ class FileStore {
       runInAction(() => {
         this.loading = true;
       });
-      if (userStore.user.id == null) {
-        userStore.user.id = parseInt(sessionStorage.getItem('userId') ?? '');
-        userStore.fetchUser(userStore.user.id);
-      }
+     
+      this.ensureUserId();
       const response = await axios.get(`${this.url}/filesShared/${userStore.user.email}`);
 
       runInAction(() => {
@@ -98,7 +104,7 @@ class FileStore {
       });
     } catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load files");
+          this.error = this.handleHttpError(error, "Failed to fetch shared files");
       });
 
   }
@@ -118,10 +124,7 @@ class FileStore {
     formData.append("password", password);
     formData.append("fileType", type);
 
-    console.log(formData.get("fileName"));
-    if (userStore.user.id == null) {
-      userStore.user.id = parseInt(sessionStorage.getItem('userId') ?? '');
-    }
+   this.ensureUserId();
     try {
       runInAction(() => {
         this.loading = true;
@@ -140,7 +143,7 @@ class FileStore {
       return true;
     } catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load files");
+          this.error = this.handleHttpError(error, "Failed to upload file");
       });
       return false;
 
@@ -165,7 +168,7 @@ class FileStore {
       await this.fetchFiles();
     } catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load files");
+          this.error = this.handleHttpError(error, "Failed to delete file");
       });
 
   }
@@ -196,7 +199,7 @@ class FileStore {
     }
     catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load files");
+          this.error = this.handleHttpError(error, "Failed to edit file");
       });
 
   }
@@ -209,14 +212,13 @@ class FileStore {
 
 
   async shareFile(file: UserFile, email: string) {
-    console.log(email);
 
     try {
       runInAction(() => {
 
         this.loading = true;
       });
-      userStore.fetchUser(userStore.getUserId());
+      await userStore.fetchUser(userStore.getUserId());
       const response = await axios.put(`${this.url}/Sharing/${file.id}`, email);
       runInAction(() => {
         this.error = null;
@@ -230,7 +232,7 @@ class FileStore {
     }
     catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load files");
+          this.error = this.handleHttpError(error, "Failed to share file");
       });
 
   }
@@ -304,7 +306,7 @@ class FileStore {
         return new Blob([response.data], { type: response.headers["content-type"] });
     } catch (error: any) {
       runInAction(() => {
-          this.error = this.handleHttpError(error, "Failed to load filesError fetching shared file");
+          this.error = this.handleHttpError(error, "Failed to load shared file");
       });
 
   }

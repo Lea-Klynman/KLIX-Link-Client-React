@@ -86,7 +86,7 @@ class UserStore {
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = this.handleHttpError(error, "Failed to load files");
+                this.error = this.handleHttpError(error, "Failed to get user");
             });
 
         }
@@ -108,7 +108,7 @@ class UserStore {
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = this.handleHttpError(error, "Failed to load files");
+                this.error = this.handleHttpError(error, "Failed to get user by email");
             });
 
         }
@@ -130,7 +130,7 @@ class UserStore {
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = this.handleHttpError(error, "Failed to load files");
+                this.error = this.handleHttpError(error, "Failed to update user name");
             });
 
         }
@@ -151,7 +151,7 @@ class UserStore {
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = this.handleHttpError(error, "Failed to load files");
+                this.error = this.handleHttpError(error, "Failed to update user password");
             });
 
         }
@@ -174,7 +174,7 @@ class UserStore {
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = this.handleHttpError(error, "Failed to load files");
+                this.error = this.handleHttpError(error, "Failed to delete user");
             });
 
         }
@@ -195,7 +195,7 @@ class UserStore {
             });
         } catch (error: any) {
             runInAction(() => {
-                this.error = this.handleHttpError(error, "Failed to load files");
+                this.error = this.handleHttpError(error, "Failed to send email");
             });
 
         }
